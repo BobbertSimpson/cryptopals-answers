@@ -11,22 +11,17 @@ def xor_bytes(string, key):
 	for i in range(len(string)):
 		result += bytes(chr(string[i] ^ key[i % len(key)]), 'utf8');
 	return result
-
+def get_score(string):
+	score = 0
+	for letter in string:
+		score += letter_frequency.get(letter, 0)
+	return score
 def solve_one_letter_xor(string):
 	max_frequency = [-1, 0, ''] #the index and the value of the byte with the highest frequency and the string
 	for xor in range(256):	
 		all_frequency = []
 		answer = xor_bytes(string, bytes(chr(xor), 'utf8')).decode('utf8').lower()
-		current_frequency = dict()
-		frequency = 0;
-
-		for letter in answer:
-			if letter.islower() or letter == " ":
-				current_frequency[letter] = current_frequency.get(letter, 0) + 1;
-
-		for letter in answer:
-			frequency += letter_frequency.get(letter, 0)
-
+		frequency = get_score(answer);
 		
 		if max_frequency[0] == -1 or max_frequency[1] < frequency:
 			max_frequency[0] = xor
