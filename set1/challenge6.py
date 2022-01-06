@@ -41,7 +41,7 @@ def main():
 		for part in parts:
 			stuff = solve_one_letter_xor(part)
 			print(chr(stuff[0]), end="")
-			answer_parts.append(bytes(stuff[2], 'utf8'))
+			answer_parts.append(stuff[2])
 		print()
 		answer = b''
 		size = len(answer_parts[-1])
@@ -59,7 +59,7 @@ def main():
 	index = 0
 	max_index = -1
 	for answer in all_answers:
-		score = get_score(answer.decode('utf8'))
+		score = get_score(answer)
 		if score > max:
 			final_answer = answer
 			max = score

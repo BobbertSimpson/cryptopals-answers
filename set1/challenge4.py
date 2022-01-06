@@ -12,6 +12,6 @@ def main():
 		counter += 1
 		if current[1] > max[1]:
 			max = current
-	print(bytes(max[2][:-1], 'utf8') , "is the found text, and was found using the character \"" + chr(max[0]) + "\" on line", max[3])
+	print(str(max[2][:-1]) , "is the found text, and was found using the character \"" + chr(max[0]) + "\" on line", max[3])
 if __name__ == "__main__":
 	main()

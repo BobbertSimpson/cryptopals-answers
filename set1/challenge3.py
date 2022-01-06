@@ -6,21 +6,23 @@ letter_frequency = {
     'o': 0.0596302, 'p': 0.0137645, 'q': 0.0008606, 'r': 0.0497563, 's': 0.0515760, 't': 0.0729357, 'u': 0.0225134,
     'v': 0.0082903, 'w': 0.0171272, 'x': 0.0013692, 'y': 0.0145984, 'z': 0.0007836, ' ': 0.1918182
 }
-def xor_bytes(string, key):
-	result = b""
-	for i in range(len(string)):
-		result += bytes(chr(string[i] ^ key[i % len(key)]), 'utf8');
-	return result
+def xor_bytes(string1, string2):
+	result = []
+	l = max(len(string1), len(string2))
+	for i in range(l):
+		result.append(bytes([string1[i % len(string1)] ^ string2[i % len(string2)]]))
+	assert l == len(result)
+	return b''.join(result)
 def get_score(string):
 	score = 0
-	for letter in string:
-		score += letter_frequency.get(letter, 0)
+	for byte in string:
+		score += letter_frequency.get(chr(byte).lower(), 0)
 	return score
 def solve_one_letter_xor(string):
 	max_frequency = [-1, 0, ''] #the index and the value of the byte with the highest frequency and the string
 	for xor in range(256):	
 		all_frequency = []
-		answer = xor_bytes(string, bytes(chr(xor), 'utf8')).decode('utf8').lower()
+		answer = xor_bytes(string, bytes([xor]))
 		frequency = get_score(answer);
 		
 		if max_frequency[0] == -1 or max_frequency[1] < frequency:
@@ -33,7 +35,6 @@ def main():
 	string = bytes.fromhex("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
 	# string = bytes("ETAOIN SHRDLU", 'ascii');
 	max_frequency = solve_one_letter_xor(string)
-	print(bytes(max_frequency[2].upper(), 'ascii'), "was obtained by the key \"" + chr(max_frequency[0]) + "\" with the Score: ", str(round(max_frequency[1], 1)));
-
+	print(str(max_frequency[2].upper()), "was obtained by the key \"" + chr(max_frequency[0]) + "\" with the Score: ", str(round(max_frequency[1], 1)));
 if __name__ == "__main__":
-	main()		
+	main()
