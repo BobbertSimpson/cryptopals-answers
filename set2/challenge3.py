@@ -38,6 +38,6 @@ def main():
 		if predicted_cipher != cipher:
 			raise Exception("The prediction is wrong")
 			quit()
-	print("All 10000 are correct :)") 
+	print("All 10000 guesses are correct :)") 
 if __name__ == "__main__":
 	main()
