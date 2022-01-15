@@ -6,6 +6,7 @@ from Crypto import Random
 from set1.challenge8 import number_of_repetitions_ECB
 from string import printable
 from set2.challenge2 import encrypt_AES_ECB
+from set2.challenge1 import pad_pkcs7
 from Crypto.Random import random
 
 rand_key = Random.get_random_bytes(16)
@@ -15,7 +16,7 @@ class ECBOracle:
 
 	@staticmethod
 	def encrypt(plain_text):
-		data = rand_prefix + plain_text + b64decode("Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK")
+		data = pad_pkcs7(rand_prefix + plain_text + b64decode("Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"))
 		return encrypt_AES_ECB(data, rand_key)
 
 def find_block_size(oracle):

@@ -7,7 +7,7 @@ from base64 import b64decode
 
 def decrypt_AES_ECB(cipher_text, key):
 	cipher = AES.new(key, AES.MODE_ECB)
-	plain_text = unpad_pkcs7(cipher.decrypt(cipher_text), AES.block_size)
+	plain_text = cipher.decrypt(cipher_text)
 	return plain_text
 def main():
 	header = open("data/7.txt", 'r')

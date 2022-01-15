@@ -5,23 +5,20 @@ from Crypto.Cipher import AES
 from base64 import b64decode
 from set1.challenge7 import decrypt_AES_ECB
 from set1.challenge3 import xor_bytes
-from challenge1 import pad_pkcs7, unpad_pkcs7
+from set2.challenge1 import pad_pkcs7, unpad_pkcs7
 
 def encrypt_AES_ECB(plain_text, key):
-	padded_plain_text = pad_pkcs7(plain_text, AES.block_size)
 	cipher = AES.new(key, AES.MODE_ECB)
-	cipher_text = cipher.encrypt(padded_plain_text)
+	cipher_text = cipher.encrypt(plain_text)
 	return cipher_text
 
 def encrypt_AES_CBC(plain_text, key, IV):
 	if len(plain_text) == 0:
 		raise Exception("The plaintext is of 0 length")
-	padded_plain_text = pad_pkcs7(plain_text, AES.block_size)
-	blocks = [padded_plain_text[i * AES.block_size: i * AES.block_size + AES.block_size] for i in range(len(padded_plain_text)//AES.block_size)]
+	blocks = [plain_text[i * AES.block_size: i * AES.block_size + AES.block_size] for i in range(len(plain_text)//AES.block_size)]
 	cipher_text_blocks = [encrypt_AES_ECB(xor_bytes(blocks[0], IV), key)]
 	for i in range(len(blocks) - 1):
-		cipher_text_blocks.append(encrypt_AES_ECB(xor_bytes(cipher_text_blocks[i], blocks[i + 1]), key))
-	
+		cipher_text_blocks.append(encrypt_AES_ECB(xor_bytes(cipher_text_blocks[i], blocks[i + 1]), key))	
 	return b''.join(cipher_text_blocks)
 
 def decrypt_AES_CBC(cipher_text, key, IV):
@@ -33,7 +30,7 @@ def decrypt_AES_CBC(cipher_text, key, IV):
 	plain_text_blocks = [xor_bytes(xor_blocks[0], IV)]
 	for i in range(len(xor_blocks) - 1):
 		plain_text_blocks.append(xor_bytes(xor_blocks[i + 1], cipher_text_blocks[i]))
-	return unpad_pkcs7(b"".join(plain_text_blocks), AES.block_size)
+	return b"".join(plain_text_blocks)
 	
 def main():
 	h = open('data/10.txt', 'r')

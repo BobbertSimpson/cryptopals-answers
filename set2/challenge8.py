@@ -28,7 +28,6 @@ def bitflip_CBC():
 	cipher_text = bytearray(oracle.encrypt(input_bytes))
 	cipher_text[block_size * 3 - len(injection)] ^= 1
 	cipher_text[block_size * 3 - 5] ^= 1
-	print(len(cipher_text))
 	admin = oracle.decrypt(bytes(cipher_text))
 	print(admin)
 	print(oracle.check_admin(cipher_text))

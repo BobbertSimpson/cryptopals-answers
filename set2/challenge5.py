@@ -4,7 +4,7 @@ path.append("../")
 from Crypto import Random
 from set2.challenge2 import encrypt_AES_ECB
 from set1.challenge7 import decrypt_AES_ECB
-from set2.challenge1 import pad_pkcs7
+from set2.challenge1 import pad_pkcs7, unpad_pkcs7
 
 key = Random.get_random_bytes(16)
 
@@ -14,11 +14,11 @@ def parse_cookie(cookie):
 	return obj
 
 def profile_for(email):
-	encoded_encrypted_email = encrypt_AES_ECB(b"email=" + email.replace(b'=', b'').replace(b'&', b'') + b"&uid=10&role=user", key)
+	encoded_encrypted_email = encrypt_AES_ECB(pad_pkcs7(b"email=" + email.replace(b'=', b'').replace(b'&', b'') + b"&uid=10&role=user"), key)
 	return encoded_encrypted_email
 
 def decrypt_profile(profile):
-	return decrypt_AES_ECB(profile, key)
+	return unpad_pkcs7(decrypt_AES_ECB(profile, key))
 
 def become_admin():
 	block_size = 16 # I think we can assume this is the case, but if needed it can be easily deduced
@@ -33,13 +33,12 @@ def become_admin():
 	min_length_email = len("email=")
 	email2 = b'A' * (block_size - min_length_email) + injection
 	cipher_text2 = profile_for(email2)
-	head = cipher_text2[block_size: block_size * 2]
-	
-	return body + head
+	head = cipher_text2[block_size: block_size * 2]	
+	return decrypt_profile(body + head)
 	
 def main():
 	cookie = "foo=bar&baz=qux&zap=zazzle"
 	admin = become_admin()
-	print(decrypt_profile(admin))	
+	print(parse_cookie(admin.decode('utf8')))
 if __name__ == "__main__":
 	main()
