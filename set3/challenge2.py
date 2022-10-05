@@ -13,7 +13,6 @@ def encrypt_AES_CTR(plaintext, key, IV):
 	else:
 		num_blocks = len(plaintext) // block_size + 1
 	plaintext_blocks = [plaintext[i * block_size:(i + 1) * block_size] for i in range(num_blocks)]
-	counter = 0
 	ciphertext = b''
 	for block in plaintext_blocks:
 		keystream = encrypt_AES_ECB(pack('<Q', IV) + pack('<Q', counter), key)

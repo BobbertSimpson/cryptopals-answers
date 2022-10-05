@@ -4,7 +4,7 @@ path.append("../")
 from base64 import b64decode
 from set3.challenge3 import crack_CTR_auto
 
-# I think I have misunderstood the previous challenge but whatever
+# Too lazy  to write it
 def main():
 	h = open('data/20.txt', 'r')
 	ciphertexts = h.read().split()
